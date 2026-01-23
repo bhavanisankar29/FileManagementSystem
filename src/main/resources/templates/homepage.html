@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - File Management System</title>
+    <link rel="stylesheet" th:href="@{/css/homepage.css}" />
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar">
+    <a href="#" class="navbar-brand">File Management System</a>
+    <div class="navbar-links">
+        <a href="#features">Features</a>
+        <a th:href="@{/signup}" class="signup-btn">Sign Up</a>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>File Management System</h1>
+        <p>Manage your files efficiently with our modern, lightweight, and user-friendly file management solution. Experience seamless file organization and quick operations at your fingertips.</p>
+        <div class="button-group">
+            <a th:href="@{/signup}" class="cta-button">Get Started</a>
+            <a th:href="@{/login}" class="cta-button outline">Login</a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features" id="features">
+    <div class="features-container">
+        <h2 class="features-title">Why Choose Us?</h2>
+        <div class="features-grid">
+            <!-- Feature 1 -->
+            <div class="feature-box">
+                <div class="feature-icon">🎨</div>
+                <h3>Easy to Use UI</h3>
+                <p>Our intuitive and clean user interface makes file management simple and enjoyable. No complex menus or confusing options—everything is designed with you in mind. Start managing your files in seconds, not hours.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="feature-box">
+                <div class="feature-icon">⚡</div>
+                <h3>Quick Operations</h3>
+                <p>Perform file operations at lightning speed. Upload, download, move, and organize your files without any delays. Our optimized backend ensures that your work is done instantly, keeping you productive and focused.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="feature-box">
+                <div class="feature-icon">🪶</div>
+                <h3>Lightweight Application</h3>
+                <p>Built for efficiency, our application uses minimal resources and loads instantly on any device. No bloatware, no unnecessary features—just the essentials you need to manage files effectively, whether you're on desktop or mobile.</p>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

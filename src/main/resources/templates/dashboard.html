@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - File Management System</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>File Management Dashboard</h1>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="signout-btn">Logout</button>
+        </form>
+
+    </div>
+
+    <div th:if="${userName}" class="header">
+        <h1>Welcome, <span th:text="${userName}"></span> </h1>
+    </div>
+
+    <div th:if="${fileUploadSuccess}" class="message success">
+        <p th:text="${fileUploadSuccess}"></p>
+    </div>
+
+    <div th:if="${fileUploadError}" class="message error">
+        <p th:text="${fileUploadError}"></p>
+    </div>
+
+    <div th:if="${deleteSuccess}" class="message success">
+        <p th:text="${deleteSuccess}"></p>
+    </div>
+
+    <div th:if="${deleteAllSuccess}" class="message success">
+        <p th:text="${deleteAllSuccess}"></p>
+    </div>
+
+    <div th:if="${deleteError}" class="message error">
+        <p th:text="${deleteError}"></p>
+    </div>
+
+    <div class="upload-section">
+        <h2>Upload New File</h2>
+        <form th:action="@{/upload}" method="post" enctype="multipart/form-data" class="upload-form">
+            <div class="file-input-wrapper">
+                <input type="file" id="fileInput" name="file" required hidden />
+                <label for="fileInput" class="custom-file-btn">Choose file</label>
+                <span id="fileName" class="file-name">No file chosen</span>
+            </div>
+
+            <button type="submit" class="upload-btn">Upload</button>
+        </form>
+    </div>
+
+    <div class="files-section">
+        <h2>Your Files</h2>
+        <div th:if="${files != null and files.size() > 0}">
+            <table>
+                <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Type</th>
+                    <th>Size(in KB)</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="file : ${files}">
+                    <td th:text="${file.originalFilename}"></td>
+                    <td th:text="${file.displayFiletype}"></td>
+                    <td th:text="${file.filesize}"></td>
+                    <td>
+                        <div class="action-links">
+                            <a th:href="@{/download/{id}(id = ${file.id})}" class="download-link">Download</a>
+                            <form th:action="@{/delete/{id}(id = ${file.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="delete-btn">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${files == null or files.size() == 0}" class="empty-message">
+            <p>No files uploaded yet. Start by uploading your first file!</p>
+        </div>
+    </div>
+
+    <div class="footer-actions">
+        <form th:action="@{/delete-all}" method="post" onsubmit="return confirm('Are you sure you want to delete all files?');">
+            <button type="submit" class="delete-all-btn">Delete All Files</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById("fileInput").addEventListener("change", function () {
+        const fileName = this.files.length > 0 ? this.files[0].name : "";
+        document.getElementById("fileName").textContent = fileName;
+    });
+</script>
+
+</body>
+</html>

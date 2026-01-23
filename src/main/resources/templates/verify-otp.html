@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - File Management System</title>
+    <link rel="stylesheet" th:href="@{/css/verify-otp.css}">
+</head>
+<body>
+<div class="page-title">File Management System</div>
+<div class="container">
+    <div class="header">
+        <h1>Verify OTP</h1>
+        <p>Enter the OTP sent to your email</p>
+    </div>
+
+    <div class="message error" th:if="${wrongOtp}">
+        <p th:text="${wrongOtp}"></p>
+    </div>
+
+    <div class="message error" th:if="${otpExpired}">
+        <p th:text="${otpExpired}"></p>
+    </div>
+
+    <form th:action="@{/verify-otp}" method="post">
+        <div class="form-group">
+            <input type="hidden" name="email" th:value="${userEmail}" />
+            <label for="otp">OTP</label>
+            <input type="text" id="otp" name="otp" required placeholder="Enter 6-digit OTP" maxlength="6">
+        </div>
+
+        <button type="submit" class="submit-btn">Verify OTP</button>
+    </form>
+
+    <div class="back-link">
+        <a th:href="@{/forgot-password}">Resend OTP</a>
+    </div>
+</div>
+</body>
+</html>

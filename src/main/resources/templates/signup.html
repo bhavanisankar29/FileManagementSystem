@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - File Management System</title>
+    <link rel="stylesheet" th:href="@{/css/signup.css}">
+</head>
+<body>
+<div class="page-title">File Management System</div>
+<div class="container">
+    <div class="header">
+        <h1>Create Account</h1>
+        <p>Join our File Management System</p>
+    </div>
+
+    <div class="message error" th:if="${emailAlreadyExists}">
+        <p th:text="${emailAlreadyExists}"></p>
+    </div>
+
+    <div class="message error" th:if="${passwordMismatch}">
+        <p th:text="${passwordMismatch}"></p>
+    </div>
+
+    <form th:action="@{/signup}" method="post">
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullname" required autocomplete="name" placeholder="Enter your full name">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="Enter a valid email">
+        </div>
+
+        <div class="password-requirements">
+            <p><strong>Password Requirements:</strong></p>
+            <ul>
+                <li>At least 8 characters long</li>
+                <li>At least one uppercase letter (A-Z)</li>
+                <li>At least one number (0-9)</li>
+            </ul>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="new-password" placeholder="Create a strong password">
+            <div class="password-strength" id="strengthIndicator"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required autocomplete="new-password" placeholder="Confirm your password">
+        </div>
+
+        <button type="submit" class="submit-btn">Sign Up</button>
+    </form>
+
+    <div class="signin-link">
+        Already have an account? <a th:href="@{/login}">Sign in</a>
+    </div>
+</div>
+
+<script>
+    const passwordInput = document.getElementById('password');
+    const strengthIndicator = document.getElementById('strengthIndicator');
+
+    passwordInput.addEventListener('input', function() {
+        const password = this.value;
+        let strength = '';
+
+        if (password.length === 0) {
+            strengthIndicator.textContent = '';
+        } else if (password.length < 8) {
+            strength = 'Weak password';
+            strengthIndicator.className = 'password-strength weak';
+            strengthIndicator.textContent = strength;
+        } else if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+            strength = 'Fair password (add uppercase and numbers)';
+            strengthIndicator.className = 'password-strength fair';
+            strengthIndicator.textContent = strength;
+        } else {
+            strength = 'Good password';
+            strengthIndicator.className = 'password-strength good';
+            strengthIndicator.textContent = strength;
+        }
+    });
+</script>
+</body>
+</html>
