@@ -13,7 +13,6 @@ A secure web-based platform for users to upload, manage, and download files with
 - [API Endpoints](#api-endpoints)
 - [Security](#security)
 - [OTP System](#otp-system)
-- [Troubleshooting](#troubleshooting)
 
 ## ✨ Features
 
@@ -32,7 +31,6 @@ A secure web-based platform for users to upload, manage, and download files with
 - **Password Hashing** - BCrypt encryption for all passwords
 - **CSRF Protection** - Cross-Site Request Forgery protection enabled
 - **Spring Security** - Comprehensive authentication and authorization
-- **Session Management** - Secure session handling
 
 ## 🛠 Tech Stack
 
@@ -217,11 +215,6 @@ All endpoints follow the MVC pattern and serve HTML pages with embedded forms.
 - CSRF tokens are automatically generated and validated
 - Enabled with: `csrf(Customizer.withDefaults())`
 - Required for all POST/PUT/DELETE requests
-
-### Session Management
-- User sessions managed by Spring Security
-- Automatic session timeout after inactivity
-- Secure cookie handling
 
 ### File Security
 - Files are stored securely on the server
