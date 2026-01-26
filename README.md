@@ -18,6 +18,7 @@ A secure web-based platform for users to upload, manage, and download files with
 
 ### Core Features
 - **User Registration** - Create new user accounts with validation
+- **Verify user** - OTP-based user verification
 - **Login / Logout** - Secure authentication with session management
 - **Forgot Password** - OTP-based password recovery
 - **File Upload** - Upload files securely to the server
@@ -202,6 +203,7 @@ All endpoints follow the MVC pattern and serve HTML pages with embedded forms.
 | `POST` | `/verify-otp` | Verify OTP for password reset |
 | `POST` | `/reset-password` | Reset password with new credentials |
 | `GET` | `/logout` | User logout (clears session) |
+| `POST` | `/resend-otp` | Resend otp to the user's email |
 
 
 ## 🔒 Security
@@ -228,14 +230,6 @@ All endpoints follow the MVC pattern and serve HTML pages with embedded forms.
 - **Expiry Time:** 5 minutes
 - **One-Time Use:** OTP is deleted after successful verification
 - **Delivery:** Sent via Gmail SMTP
-
-### OTP Flow
-1. User initiates "Forgot Password"
-2. System generates random 6-digit OTP
-3. OTP sent to registered email address
-4. User enters OTP on verification page
-5. If valid and not expired, user can set new password
-6. OTP is automatically deleted after use
 
 ## 🤝 Contributing
 
