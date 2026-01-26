@@ -41,25 +41,6 @@ public class PasswordController {
         return "verify-otp";
     }
 
-    @GetMapping("/verify-otp")
-    public String verifyOtp() { return "verify-otp";}
-
-    @PostMapping("/verify-otp")
-    public String verifyOtp(@RequestParam String email,
-                            @RequestParam String otp,
-                            Model model) {
-
-        // Check if entered OTP is valid or not
-        boolean isValid = otpService.verifyOtp(email, otp);
-        if(!isValid){
-            model.addAttribute("userEmail", email);
-            model.addAttribute("wrongOtp", "Invalid otp");
-            return "verify-otp";
-        }
-        model.addAttribute("userEmail", email);
-        return "reset-password";
-    }
-
     @PostMapping("/reset-password")
     public String handleResetPassword(@RequestParam String email,
                                       @RequestParam String password,
@@ -74,6 +55,6 @@ public class PasswordController {
         // Save the encoded password
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
-        return "redirect:/login";
+        return "redirect:/login?passwordResetSuccess=true";
     }
 }

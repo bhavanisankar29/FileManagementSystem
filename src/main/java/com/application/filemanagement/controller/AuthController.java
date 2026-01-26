@@ -5,7 +5,9 @@ import com.application.filemanagement.dto.SignupRequest;
 import com.application.filemanagement.exceptions.EmailAlreadyExistsException;
 import com.application.filemanagement.exceptions.PasswordMismatchException;
 import com.application.filemanagement.service.EmailService;
+import com.application.filemanagement.service.OtpService;
 import com.application.filemanagement.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +19,12 @@ public class AuthController {
 
     private final UserService userService;
     private final EmailService emailService;
-    public AuthController(UserService userService, EmailService emailService) {
+    private final OtpService otpService;
+
+    public AuthController(UserService userService, EmailService emailService, OtpService otpService) {
         this.userService = userService;
         this.emailService = emailService;
+        this.otpService = otpService;
     }
 
     @GetMapping("/")
@@ -36,7 +41,8 @@ public class AuthController {
 
     @PostMapping("/signup")
     public String signup(@ModelAttribute SignupRequest signupRequest,
-                         Model model) {
+                         Model model,
+                         HttpServletRequest request) {
         try {
             userService.registerUser(signupRequest);
             // Create MailRequest Object and send welcome email to the user
@@ -92,9 +98,10 @@ public class AuthController {
                 </html>
                 """.formatted(signupRequest.getFullname(), signupRequest.getFullname()));
 
-            emailService.sendWelcomeMail(mailRequest);
-
-            return "redirect:/login?Success";
+            emailService.sendWelcomeMail(mailRequest); // Send welcome mail to the user
+            otpService.sendOtp(signupRequest.getEmail()); // Send email - verification to the user
+            request.getSession().setAttribute("VERIFY_EMAIL", signupRequest.getEmail());
+            return "redirect:/verify-email";
         } catch (EmailAlreadyExistsException e) {
             model.addAttribute("emailAlreadyExists", e.getMessage());
             return "signup";

@@ -17,7 +17,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthFailureHandler customAuthFailureHandler) throws Exception {
 
         http
                 .authorizeHttpRequests(auth -> auth
@@ -28,6 +28,10 @@ public class SecurityConfig {
                                 "/forgot-password",
                                 "/verify-otp",
                                 "/reset-password",
+                                "/verify-email",
+                                "/verify-email/**",
+                                "/resend-otp",
+                                "/resend-otp/**",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**"
@@ -39,7 +43,7 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/dashboard", true)
-                        .failureUrl("/login?error")
+                        .failureHandler(customAuthFailureHandler)
                         .permitAll()
                 )
 

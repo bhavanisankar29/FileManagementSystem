@@ -24,6 +24,12 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    @Column(name = "emailverified")
+    private boolean emailVerified;
+
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<FileEntity> files;
 }
