@@ -18,6 +18,11 @@
         <p>Invalid OTP</p>
     </div>
 
+    <div class="message error" th:if="${param.inactiveUser}">
+        <p>Email not verified!!</p>
+        <p>Verify email to login</p>
+    </div>
+
     <div class="message success" th:if="${param.resend}">
         <p>OPT resent successfully</p>
     </div>

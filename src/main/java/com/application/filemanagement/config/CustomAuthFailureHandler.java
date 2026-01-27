@@ -24,7 +24,7 @@ public class CustomAuthFailureHandler implements AuthenticationFailureHandler {
         if (exception instanceof DisabledException) {
             // Redirect inactive users to OTP verification
             request.getSession().setAttribute("VERIFY_EMAIL", email);
-            response.sendRedirect("/verify-email");
+            response.sendRedirect("/verify-email?inactiveUser");
             return;
         }
 
