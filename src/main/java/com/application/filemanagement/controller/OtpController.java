@@ -72,7 +72,7 @@ public class OtpController {
                             RedirectAttributes redirectAttributes) {
         String email = (String) request.getSession().getAttribute("VERIFY_EMAIL");
         if(email == null){ return "redirect:/login"; }
-        otpService.resendOtp(email);
+        otpService.sendOtp(email);
         redirectAttributes.addFlashAttribute("OTPsent", "OTP resent successfully");
         return "redirect:/verify-email?resend=success";
     }

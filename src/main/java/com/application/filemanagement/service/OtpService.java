@@ -22,13 +22,13 @@ public class OtpService {
     @Transactional
     public void sendOtp(String email) {
 
-        // 1. Delete previous OTPs for this email
+        // Delete previous OTPs for this email
         otpRepository.deleteByEmail(email);
 
-        // 2. Generate 6-digit OTP
+        // Generate 6-digit OTP
         String otp = String.valueOf(new SecureRandom().nextInt(900000) + 100000);
 
-        // 3. Save OTP in database
+        // Save OTP in database
         OtpEntity otpEntity = new OtpEntity();
         otpEntity.setEmail(email);
         otpEntity.setOtp(otp);
@@ -38,9 +38,8 @@ public class OtpService {
         emailService.sendOtpMail(email, otp);
     }
 
-
     public boolean verifyOtp(String email, String otp){
-        // Check if OTP-ENTITY with the given email, otp in the database
+        // Check if OTP-ENTITY with the given email & otp is in the database
         Optional<OtpEntity> otpEntity = otpRepository.findByEmailAndOtp(email, otp);
         if(otpEntity.isEmpty()) return false;
         OtpEntity otpEntity1 = otpEntity.get();
@@ -48,24 +47,9 @@ public class OtpService {
             otpRepository.delete(otpEntity1);
             return false;
         }
-        // We delete it because it is one-time use
+        // Delete OTP it because it is one-time use
         otpRepository.delete(otpEntity1);
         return true;
 
-    }
-
-    @Transactional
-    public void resendOtp(String email){
-        otpRepository.deleteByEmail(email);
-
-        String otp = String.valueOf(new SecureRandom().nextInt(900000) + 100000);
-
-        OtpEntity otpEntity = new OtpEntity();
-        otpEntity.setEmail(email);
-        otpEntity.setOtp(otp);
-        otpEntity.setExpiryTime(LocalDateTime.now().plusMinutes(5));
-        otpRepository.save(otpEntity);
-
-        emailService.sendOtpMail(email, otp);
     }
 }

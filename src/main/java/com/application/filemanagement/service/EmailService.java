@@ -75,8 +75,62 @@ public class EmailService {
         sendHtmlMail(mailRequest);
     }
 
-    // HTML Welcome email (UPDATED)
-    public void sendWelcomeMail(MailRequest mailRequest) {
+    // HTML Welcome email
+    public void sendWelcomeMail(String email, String fullname) {
+
+        String htmlMessage = """
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Welcome</title>
+                </head>
+                <body style="margin:0; padding:0; background-color:#f4f6f8; font-family: Arial, sans-serif;">
+                    <table width="100%%" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td align="center" style="padding: 40px 0;">
+                                <table width="500" cellpadding="0" cellspacing="0"
+                                       style="background:#ffffff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                                    <tr>
+                                        <td style="padding: 24px; text-align:center;">
+                                            <h2 style="margin:0; color:#24292e;">
+                                                Welcome, %s
+                                            </h2>
+                                        </td>
+                                    </tr>
+            
+                                    <tr>
+                                        <td style="padding: 0 24px 24px; color:#57606a; font-size:14px;">
+                                            <p>Hi <strong>%s</strong>,</p>
+            
+                                            <p>
+                                                Thanks for registering on our website!  
+                                                We’re really happy to have you on board.
+                                            </p>
+            
+                                            <p>
+                                                You can now explore all the features and start using the platform.
+                                            </p>
+            
+                                            <p style="margin-top:32px;">
+                                                Cheers,<br>
+                                                <strong>File Management System Team</strong>
+                                            </p>
+                                        </td>
+                                    </tr>
+            
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>
+                """.formatted(fullname, fullname);
+        MailRequest mailRequest = new MailRequest();
+        mailRequest.setTo(email);
+        mailRequest.setSubject("Thanks for registering on our website!");
+        mailRequest.setMessage(htmlMessage);
+
         sendHtmlMail(mailRequest);
     }
 
@@ -88,7 +142,7 @@ public class EmailService {
 
             helper.setTo(mailRequest.getTo());
             helper.setSubject(mailRequest.getSubject());
-            helper.setText(mailRequest.getMessage(), true); // true = HTML
+            helper.setText(mailRequest.getMessage(), true);
 
             mailSender.send(message);
         } catch (MessagingException e) {
