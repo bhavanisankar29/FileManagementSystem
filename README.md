@@ -129,14 +129,14 @@ Or if you've already built:
 java -jar target/file-management-system-1.0.0.jar
 ```
 
-The application will start on **http://localhost:8000**
+The application will start on **http://localhost:8080**
 
 ### Step 5: Access the Application
 
 Open your web browser and navigate to:
 
 ```
-http://localhost:8000
+http://localhost:8080
 ```
 
 ## ⚙️ Configuration
