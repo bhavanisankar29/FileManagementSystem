@@ -93,8 +93,8 @@ mysql --version
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/file-management-system.git
-cd file-management-system
+git clone https://github.com/bhavanisankar29/FileManagementSystem.git
+cd FileManagementSystem
 ```
 
 ### Step 2: Create MySQL Database
