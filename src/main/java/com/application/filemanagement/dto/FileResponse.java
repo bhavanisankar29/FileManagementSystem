@@ -12,5 +12,7 @@ public class FileResponse {
     private String storedFilename;
     private String displayFiletype;
     private Long filesize;
+    private boolean shared;
+    private String shareToken;
 
 }

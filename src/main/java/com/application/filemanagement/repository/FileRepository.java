@@ -9,5 +9,6 @@ import java.util.List;
 public interface FileRepository extends JpaRepository<FileEntity, Long> {
     List<FileEntity> findByUser(User user);
     FileEntity findByIdAndUser(long id, User user);
+    FileEntity findByShareToken(String shareToken);
     void deleteAllByUser(User user);
 }

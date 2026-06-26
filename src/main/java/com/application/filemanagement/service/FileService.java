@@ -11,6 +11,11 @@ public interface FileService {
     List<FileResponse>  getUserFiles(User user);
     void uploadFile(MultipartFile file, User user);
     FileDownloadDTO downloadFile(Long fileId, User user);
+
     void deleteFile(Long fileId, User user);
     void deleteAllFiles(User user);
+
+    String shareFile(Long fileId, User user);
+    void unshareFile(Long fileId, User user);
+    FileDownloadDTO downloadSharedFile(String shareToken);
 }

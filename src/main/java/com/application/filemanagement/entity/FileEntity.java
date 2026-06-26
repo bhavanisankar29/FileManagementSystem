@@ -31,6 +31,12 @@ public class FileEntity {
     @Column(name = "filesize")
     private Long filesize;
 
+    @Column(name = "shared")
+    private boolean shared;
+
+    @Column(name = "share_token", unique = true)
+    private String shareToken;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

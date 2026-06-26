@@ -149,4 +149,55 @@ public class FileServiceImpl implements FileService {
         }
         fileRepository.deleteAllByUser(user);
     }
+
+    @Transactional
+    @Override
+    public String shareFile(Long fileId, User user) {
+        FileEntity file = fileRepository.findByIdAndUser(fileId, user);
+        if (file == null) {throw new RuntimeException("File not found or access denied");}
+
+        if(file.getShareToken() == null || file.getShareToken().isEmpty()) {
+            file.setShareToken(UUID.randomUUID().toString());
+        }
+        file.setShared(true);
+        fileRepository.save(file);
+        return file.getShareToken();
+    }
+
+    @Transactional
+    @Override
+    public void unshareFile(Long fileId, User user) {
+        FileEntity file = fileRepository.findByIdAndUser(fileId, user);
+        if(file == null) {
+            throw new RuntimeException("File not found or access denied");
+        }
+        file.setShared(false);
+        file.setShareToken(null);
+        fileRepository.save(file);
+    }
+
+    @Override
+    public FileDownloadDTO downloadSharedFile(String shareToken) {
+        FileEntity file = fileRepository.findByShareToken(shareToken);
+        if (file == null) {
+            throw new RuntimeException("File not found or access denied");
+        }
+
+        Path filePath = Paths.get(file.getFilepath()).normalize();
+        if(!Files.exists(filePath)) {
+            throw new FileNotFoundException("File not found on disk");
+        }
+        Resource resource;
+        try {
+            resource = new UrlResource(filePath.toUri());
+        } catch (MalformedURLException e) {
+            throw new InvalidFilePathExtension("Invalid File path");
+        }
+        return new FileDownloadDTO(
+                resource,
+                file.getOriginalFilename(),
+                file.getFiletype(),
+                file.getFilesize()
+        );
+    }
 }
