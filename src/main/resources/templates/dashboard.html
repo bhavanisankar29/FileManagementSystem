@@ -13,11 +13,10 @@
         <form th:action="@{/logout}" method="post">
             <button type="submit" class="signout-btn">Logout</button>
         </form>
-
     </div>
 
     <div th:if="${userName}" class="header">
-        <h1>Welcome, <span th:text="${userName}"></span> </h1>
+        <h1>Welcome, <span th:text="${userName}"></span></h1>
     </div>
 
     <div th:if="${fileUploadSuccess}" class="message success">
@@ -38,6 +37,19 @@
 
     <div th:if="${deleteError}" class="message error">
         <p th:text="${deleteError}"></p>
+    </div>
+
+    <div th:if="${shareSuccess}" class="message success">
+        <p th:text="${shareSuccess}"></p>
+    </div>
+
+    <div th:if="${shareError}" class="message error">
+        <p th:text="${shareError}"></p>
+    </div>
+
+    <div th:if="${shareLink}" class="message success">
+        <p>Share link:</p>
+        <a th:href="${shareLink}" th:text="${shareLink}" target="_blank"></a>
     </div>
 
     <div class="upload-section">
@@ -62,6 +74,7 @@
                     <th>File Name</th>
                     <th>Type</th>
                     <th>Size(in KB)</th>
+                    <th>Share</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -71,10 +84,22 @@
                     <td th:text="${file.displayFiletype}"></td>
                     <td th:text="${file.filesize}"></td>
                     <td>
+                        <div th:if="${file.shared}" th:with="shareUrl=@{/shared/{token}(token=${file.shareToken})}">
+                            <a th:href="${shareUrl}" th:text="${shareUrl}" target="_blank"></a>
+                        </div>
+                        <div th:if="${!file.shared}">Not shared</div>
+                    </td>
+                    <td>
                         <div class="action-links">
                             <a th:href="@{/download/{id}(id = ${file.id})}" class="download-link">Download</a>
                             <form th:action="@{/delete/{id}(id = ${file.id})}" method="post" style="display: inline;">
                                 <button type="submit" class="delete-btn">Delete</button>
+                            </form>
+                            <form th:if="${file.shared}" th:action="@{/unshare/{id}(id = ${file.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="delete-btn">Unshare</button>
+                            </form>
+                            <form th:if="${!file.shared}" th:action="@{/share/{id}(id = ${file.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="upload-btn">Share</button>
                             </form>
                         </div>
                     </td>

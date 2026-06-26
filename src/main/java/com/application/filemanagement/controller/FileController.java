@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
 public class FileController {
@@ -83,6 +84,49 @@ public class FileController {
             redirectAttributes.addFlashAttribute("deleteError", e.getMessage());
         }
         return "redirect:/dashboard";
+    }
+
+    @PostMapping("/share/{id}")
+    public String shareFile(@PathVariable Long id,
+                            @AuthenticationPrincipal CustomUserDetails userDetails,
+                            RedirectAttributes redirectAttributes) {
+        try {
+            String shareToken = fileService.shareFile(id, userDetails.getUser());
+            String shareLink = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/shared/{token}")
+                    .buildAndExpand(shareToken)
+                    .toUriString();
+            redirectAttributes.addFlashAttribute("shareSuccess", "Share link successfully created.");
+            redirectAttributes.addFlashAttribute("shareLink", shareLink);
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("shareError", "Failed to create share link.");
+        }
+        return "redirect:/dashboard";
+    }
+
+    @PostMapping("/unshare/{id}")
+    public String unshareFile(@PathVariable Long id,
+                              @AuthenticationPrincipal CustomUserDetails userDetails,
+                              RedirectAttributes redirectAttributes) {
+        try {
+            fileService.unshareFile(id, userDetails.getUser());
+            redirectAttributes.addFlashAttribute("shareSuccess", "Unshare link successfully created.");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("shareError", "Failed to unshare link.");
+        }
+        return "redirect:/dashboard";
+    }
+
+    @GetMapping("/shared/{token}")
+    public ResponseEntity<Resource> downloadSharedFile(@PathVariable String token) {
+        FileDownloadDTO file = fileService.downloadSharedFile(token);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(file.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + file.getOriginalFilename() + "\"")
+                .contentLength(file.getFilesize())
+                .body(file.getResource());
     }
 
     // Method to capitalize the first letter of a word in the given string
