@@ -23,6 +23,7 @@ A secure web-based platform for users to upload, manage, and download files with
 - **Forgot Password** - OTP-based password recovery
 - **File Upload** - Upload files securely to the server
 - **File Download** - Download uploaded files with proper authorization
+- **File Sharing** - Generate public share links for individual files (token-based, revocable)
 - **File Delete** - Delete individual or all files
 - **Dashboard** - View all uploaded files with management options
 - **Email Notifications** - OTP delivery via Gmail
@@ -195,7 +196,10 @@ All endpoints follow the MVC pattern and serve HTML pages with embedded forms.
 | `POST` | `/signup` | Process user registration |
 | `GET` | `/dashboard` | User's file management dashboard |
 | `POST` | `/upload` | Upload a new file |
-| `GET` | `/download/{id}` | Download specific file by ID |
+| `GET` | `/download/{id}` | Download specific file by ID (authenticated) |
+| `POST` | `/share/{id}` | Create or refresh a public share link for a file (authenticated) |
+| `POST` | `/unshare/{id}` | Revoke/disable a public share link for a file (authenticated) |
+| `GET` | `/shared/{token}` | Download a shared file using public share token (public, no auth required) |
 | `POST` | `/delete/{id}` | Delete specific file by ID |
 | `POST` | `/delete-all` | Delete all user's files |
 | `GET` | `/forgot-password` | Forgot password page |
@@ -222,6 +226,10 @@ All endpoints follow the MVC pattern and serve HTML pages with embedded forms.
 - Files are stored securely on the server
 - Access control enforced - users can only access their own files
 - File IDs are validated before download/deletion
+- **Public share links** use randomly generated UUID tokens that are cryptographically secure
+- Share links can be revoked by the owner at any time
+- Only the owner can create or revoke share links
+- Public share downloads do not require authentication but are limited to the specific share token
 
 ## 📧 OTP System
 
@@ -230,6 +238,42 @@ All endpoints follow the MVC pattern and serve HTML pages with embedded forms.
 - **Expiry Time:** 5 minutes
 - **One-Time Use:** OTP is deleted after successful verification
 - **Delivery:** Sent via Gmail SMTP
+
+## 🔗 File Sharing System
+
+### Overview
+The file sharing feature allows authenticated users to generate public share links for their files. Anyone with the share link can download the file without needing to log in.
+
+### How It Works
+
+#### Sharing a File
+1. User logs into the dashboard
+2. User clicks the **Share** button next to a file
+3. System generates a unique UUID token and stores it in the database
+4. A public share link is displayed to the user:
+   ```
+   http://localhost:8080/shared/{token}
+   ```
+5. User can copy and share this link with anyone
+
+#### Downloading a Shared File
+1. Anyone (authenticated or not) can access the share link
+2. The file downloads without requiring login
+3. Download is verified against the share token in the database
+4. If the token is invalid or the file was unshared, download is denied
+
+#### Revoking a Share Link
+1. User clicks the **Unshare** button next to a shared file
+2. System immediately clears the share token from the database
+3. The previous share link becomes invalid
+4. No one can download the file using the old link anymore
+
+### Security Considerations
+- Share tokens are randomly generated UUIDs (cryptographically secure)
+- Share tokens are unique and indexed in the database
+- Only the owner can create or revoke share links
+- Deleting a file automatically revokes its share link
+- Share links are not listed anywhere; they are only known by the receiver
 
 ## 🤝 Contributing
 
