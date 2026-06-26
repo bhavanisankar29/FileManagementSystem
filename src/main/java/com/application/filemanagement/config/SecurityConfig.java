@@ -32,6 +32,7 @@ public class SecurityConfig {
                                 "/verify-email/**",
                                 "/resend-otp",
                                 "/resend-otp/**",
+                                "/shared/**",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**"
