@@ -92,8 +92,10 @@ public class FileController {
                             RedirectAttributes redirectAttributes) {
         try {
             String shareToken = fileService.shareFile(id, userDetails.getUser());
-            String shareLink = ServletUriComponentsBuilder.fromCurrentRequest()
-                    .path("/share/{token}").buildAndExpand(shareToken).toUriString();
+            String shareLink = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/shared/{token}")
+                    .buildAndExpand(shareToken)
+                    .toUriString();
             redirectAttributes.addFlashAttribute("shareSuccess", "Share link successfully created.");
             redirectAttributes.addFlashAttribute("shareLink", shareLink);
         } catch (RuntimeException e) {

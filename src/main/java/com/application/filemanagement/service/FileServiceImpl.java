@@ -49,6 +49,8 @@ public class FileServiceImpl implements FileService {
         fileResponse.setStoredFilename(fileEntity.getStoredFilename());
         fileResponse.setDisplayFiletype(fileEntity.getDisplayFiletype());
         fileResponse.setFilesize(fileEntity.getFilesize());
+        fileResponse.setShared(fileEntity.isShared());
+        fileResponse.setShareToken(fileEntity.getShareToken());
         return fileResponse;
     }
 
@@ -61,7 +63,11 @@ public class FileServiceImpl implements FileService {
             Path uploadPath = Paths.get(uploadDir);
             if (!Files.exists(uploadPath)) {Files.createDirectories(uploadPath);}
 
-            String actualName = Paths.get(file.getOriginalFilename()).getFileName().toString();
+            String originalFilename = file.getOriginalFilename();
+            if (originalFilename == null || originalFilename.isBlank()) {
+                throw new IllegalArgumentException("Original filename is missing");
+            }
+            String actualName = Paths.get(originalFilename).getFileName().toString();
 
             // Get the file name without the extension
             int dotIndex = actualName.lastIndexOf('.');
@@ -84,6 +90,8 @@ public class FileServiceImpl implements FileService {
             fileEntity.setFiletype(file.getContentType());
             fileEntity.setDisplayFiletype(ext);
             fileEntity.setFilesize(file.getSize());
+            fileEntity.setShared(false);
+            fileEntity.setShareToken(null);
             fileEntity.setUser(user);
 
             fileRepository.save(fileEntity);
